@@ -49,15 +49,20 @@ def browse_files(folder):
         if item.is_file():
             file = item
             move_files(file)
-            if any(folder.iterdir()) == False:
+
+        elif item.name not in EXTENSIONS:
+            if not any(folder.iterdir()):
                 folder.rmdir()
-                break
-        elif item.name != EXTENSIONS.keys():
+                continue
+
             new_item_name = normalize(item.name.removesuffix(item.suffix))
             new_path_item = folder.joinpath(new_item_name + item.suffix)
             new_item = item.rename(new_path_item)
             subfolder = new_item
             browse_files(subfolder)
+
+            if not any(subfolder.iterdir()):
+                subfolder.rmdir()
 
 
 # <move_file> function
